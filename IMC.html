@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Calculadora de IMC | Mi Consola Web</title>
+    <link rel="shortcut icon" href="./ASSETS/IMG/favicon.ico" type="image/x-icon">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f9;
+            padding: 20px;
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+            box-sizing: border-box;
+        }
+        .formulario, .consola {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 45%;
+            box-sizing: border-box;
+        }
+        /* Estilo simulando la consola de Eclipse */
+        .consola {
+            background-color: #1e1e1e;
+            color: #39ff14; 
+            font-family: monospace;
+            overflow-y: auto;
+            height: 350px;
+        }
+        .campo {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .linea-consola {
+            margin-bottom: 8px;
+            border-bottom: 1px dashed #333;
+            padding-bottom: 5px;
+        }
+        @media (max-width: 700px) {
+            body {
+                flex-direction: column;
+                padding: 12px;
+                gap: 16px;
+            }
+            .formulario, .consola {
+                width: 100%;
+                padding: 16px;
+            }
+            .consola {
+                height: 300px;
+            }
+            h2, h3 {
+                margin-top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Lado Izquierdo: Interfaz de usuario (HTML5) -->
+    <div class="formulario">
+        <h2>Ingresar Datos</h2>
+        <div class="campo">
+            <label for="peso">Ingrese su peso (kg):</label>
+            <input type="number" id="peso" step="0.1" placeholder="Ej. 70.5" required>
+        </div>
+        <div class="campo">
+            <label for="altura">Ingrese su altura (metros):</label>
+            <input type="number" id="altura" step="0.01" placeholder="Ej. 1.75" required>
+        </div>
+        <button onclick="calcularIMC()">Calcular IMC</button>
+    </div>
+
+    <!-- Lado Derecho: Simulación de la Consola de Eclipse -->
+    <div class="consola">
+        <h3>[Consola de Eclipse - Salida]</h3>
+        <div id="pantalla-consola">
+            <!-- Aquí se irán acumulando los System.out.println -->
+            Esperando datos...
+        </div>
+    </div>
+
+    <!-- Lógica del programa traducida -->
+    <script>
+        // Esta variable simula el historial de la consola
+        let historialConsola = "";
+        let contadorPersonas = 0;
+
+        function calcularIMC() {
+            // Capturamos lo que el usuario escribió en la pantalla (Sustituye al Scanner)
+            const peso = parseFloat(document.getElementById('peso').value);
+            const altura = parseFloat(document.getElementById('altura').value);
+
+            // Validación simple para evitar divisiones por cero
+            if (!peso || !altura || altura <= 0) {
+                alert("Por favor, ingrese valores válidos de peso y altura.");
+                return;
+            }
+
+            contadorPersonas++;
+
+            // La misma fórmula matemática que tenías en Java
+            const imc = peso / (altura * altura);
+            
+            // Evaluamos la categoría usando la misma lógica de tus condicionales 'if'
+            let resultadoCategoria = "";
+            if (imc < 18.5) {
+                resultadoCategoria = "bajo peso";
+            } else if (imc >= 18.5 && imc <= 24.9) {
+                resultadoCategoria = "peso normal";
+            } else if (imc >= 25 && imc <= 26.9) {
+                resultadoCategoria = "sobrepeso grado 1";
+            } else if (imc >= 27 && imc <= 29.9) {
+                resultadoCategoria = "sobrepeso grado 2";
+            } else if (imc >= 30 && imc <= 34.9) {
+                resultadoCategoria = "obesidad tipo 1";
+            } else if (imc >= 35 && imc <= 39.9) {
+                resultadoCategoria = "obesidad tipo 2";
+            } else if (imc >= 40 && imc <= 49.9) {
+                resultadoCategoria = "obesidad tipo 3";
+            } else if (imc >= 50) { // Corregido el último rango para evitar solapamientos
+                resultadoCategoria = "obesidad tipo 4";
+            }
+
+            // Traducimos tus System.out.println creando bloques de texto para la consola web
+            if(contadorPersonas === 1) { historialConsola = ""; } // Limpiar el mensaje inicial
+
+            historialConsola += `
+                <div class="linea-consola">
+                    <strong>Persona #${contadorPersonas}</strong><br>
+                    > peso ingresado: ${peso} kg<br>
+                    > altura ingresada: ${altura} m<br>
+                    > su IMC es: ${imc.toFixed(2)}<br>
+                    > Diagnóstico: <strong>${resultadoCategoria}</strong>
+                </div>
+            `;
+
+            // Imprimimos el resultado acumulado en el DIV de la consola
+            document.getElementById('pantalla-consola').innerHTML = historialConsola;
+
+            // Limpiamos los campos de texto automáticamente para la siguiente persona
+            document.getElementById('peso').value = "";
+            document.getElementById('altura').value = "";
+        }
+    </script>
+</body>
+</html>
